@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>救急搬送依頼</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css">
+<script charset="utf-8" src="https://static.worksmobile.net/static/wm/woff/edge/3.6/sdk.js"></script>
+</head>
+<body>
+<form id="myForm">
+
+  <div class="form-group">
+    <label for="summary">概要:</label>
+    <textarea id="summary" name="summary" rows="4" cols="50"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="age">年齢:</label>
+    <input type="number" id="age" name="age" min="0" max="120" class="form-control" placeholder="年齢">
+  </div>
+
+<div class="form-group">
+  <label for="gender">性別:</label>
+  <select id="gender" name="gender" class="form-control" required>
+    <option value="">性別を選択</option>
+    <option value="male">男</option>
+    <option value="female">女</option>
+    <option value="unknown">不明</option>
+  </select>
+</div>
+
+<div class="form-group">
+  <label for="jcs">JCS:</label>
+  <select id="jcs" name="jcs" class="form-control">
+    <option value="0">0: 正常な意識</option>
+    <option value="1">1: 軽度の意識障害 (目を開けて反応)</option>
+    <option value="2">2: 軽度の意識障害 (音声に反応)</option>
+    <option value="3">3: 軽度の意識障害 (痛みに反応)</option>
+    <option value="10">10: 中等度の意識障害 (目を開けるが反応しない)</option>
+    <option value="20">20: 中等度の意識障害 (声にも痛みにも反応しない)</option>
+    <option value="30">30: 中等度の意識障害 (痛みに対してのみ反応)</option>
+    <option value="100">100: 重度の意識障害 (目を開ける反応なし)</option>
+    <option value="200">200: 重度の意識障害 (声に対しても痛みに対しても反応なし)</option>
+    <option value="300">300: 重度の意識障害 (痛みに対してのみ極めて弱い反応)</option>
+  </select>
+</div>
+
+<!-- 数値入力フィールド（呼吸数） -->
+<div class="form-group">
+  <label for="respiration_rate">呼吸数（1分間の呼吸回数）:</label>
+  <input type="number" id="respiration_rate" name="respiration_rate" min="0" max="60" placeholder="回/分" class="form-control">
+</div>
+
+<!-- ドロップダウンメニュー（呼吸の質） -->
+<div class="form-group">
+  <label for="respiration_quality">呼吸の質:</label>
+  <select id="respiration_quality" name="respiration_quality" class="form-control">
+    <option value="">選択してください</option>
+    <option value="normal">正常</option>
+    <option value="shallow">浅い</option>
+    <option value="deep">深い</option>
+    <option value="irregular">不規則</option>
+  </select>
+</div>
+
+<!-- チェックボックス（特定の呼吸パターン） -->
+<div class="form-group">
+  <fieldset>
+    <legend>特定の呼吸パターン（該当するものを全て選択）:</legend>
+    <label><input type="checkbox" name="respiration_pattern" value="hyperventilation"> 過換気</label>
+    <label><input type="checkbox" name="respiration_pattern" value="hypoventilation"> 低換気</label>
+    <label><input type="checkbox" name="respiration_pattern" value="cheyne_stokes"> チェーン・ストークス呼吸</label>
+    <label><input type="checkbox" name="respiration_pattern" value="kusmaul"> クスマウル呼吸</label>
+    <label><input type="checkbox" name="respiration_pattern" value="biot"> ビオ呼吸</label>
+  </fieldset>
+</div>
+
+
+  <div class="form-group">
+    <label for="pulse">脈拍:</label>
+    <input type="number" id="pulse" name="pulse" min="30" max="200" placeholder="脈拍数（BPM）" class="form-control">
+  </div>
+
+<div class="form-group">
+  <label for="systolic_bp_slider">収縮期血圧（上）:</label>
+  <input type="range" id="systolic_bp_slider" name="systolic_bp_slider" min="80" max="200" class="form-control-slider">
+  <span id="systolic_bp_value">120</span> mmHg
+</div>
+
+<div class="form-group">
+  <label for="diastolic_bp_slider">拡張期血圧（下）:</label>
+  <input type="range" id="diastolic_bp_slider" name="diastolic_bp_slider" min="40" max="120" class="form-control-slider">
+  <span id="diastolic_bp_value">80</span> mmHg
+</div>
+
+
+  <div class="form-group">
+    <label for="temperature">体温:</label>
+<!--    <input type="text" id="temperature" name="temperature" class="form-control"> -->
+<select id="temperature" name="temperature" class="form-control">
+  <!-- JavaScriptで選択肢を動的に追加 -->
+</select>
+
+  </div>
+
+  <div class="form-group">
+    <label for="other">その他:</label>
+    <textarea id="other" name="other" rows="4" cols="50" class="form-control"></textarea>
+  </div>
+
+  <button type="button" onclick="submitForm()">送信</button>
+</form>
+<script src="woff.js"></script>
+<script>
+// 収縮期血圧スライダーの値が変更されたときのイベントリスナー
+document.getElementById('systolic_bp_slider').addEventListener('input', function() {
+    // スライダーの値を取得
+    var value = this.value;
+    // 収縮期血圧の表示を更新
+    document.getElementById('systolic_bp_value').textContent = value;
+});
+
+// 拡張期血圧スライダーの値が変更されたときのイベントリスナー
+document.getElementById('diastolic_bp_slider').addEventListener('input', function() {
+    // スライダーの値を取得
+    var value = this.value;
+    // 拡張期血圧の表示を更新
+    document.getElementById('diastolic_bp_value').textContent = value;
+});
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const selectElement = document.getElementById('temperature');
+    for (let i = 35.5; i <= 41.0; i += 0.1) {
+      let option = document.createElement('option');
+      option.value = option.textContent = i.toFixed(1) + '℃';
+      // 36.5を既定値に設定
+      if (i.toFixed(1) === '36.5') {
+        option.selected = true;
+      }
+      selectElement.appendChild(option);
+    }
+  });
+</script>
+
+</body>
+</html>
